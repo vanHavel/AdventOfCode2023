@@ -1,0 +1,9 @@
+[tool.poetry]
+name = "aoc2023"
+version = "1.0.0"
+description = "Advent of Code 2023"
+authors = ["Lukas Huwald"]
+license = "MIT"
+[tool.poetry.dependencies]
+python = "~3.11"
+advent-of-code-data = "*"

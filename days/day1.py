@@ -33,4 +33,4 @@ if __name__ == '__main__':
     # submit(answer=ans1, day=DAY, year=YEAR, part=1)
     ans2 = part2(input_data)
     print(ans2)
-    # submit(answer=ans1, day=DAY, year=YEAR, part=2)
+    # submit(answer=ans2, day=DAY, year=YEAR, part=2)

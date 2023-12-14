@@ -1,18 +1,78 @@
-from typing import TypeVar, Iterable
+from enum import Enum
+from typing import TypeVar, Iterable, Callable
 
 T = TypeVar("T")
+
+
+class Dir(Enum):
+    N = "N"
+    E = "E"
+    S = "S"
+    W = "W"
+
+
+Pos = tuple[int, int]
+
+
+def right(d: Dir) -> Dir:
+    if d == Dir.W:
+        return Dir.N
+    if d == Dir.N:
+        return Dir.E
+    if d == Dir.E:
+        return Dir.S
+    if d == Dir.S:
+        return Dir.W
+
+
+def left(d: Dir) -> Dir:
+    if d == Dir.W:
+        return Dir.S
+    if d == Dir.N:
+        return Dir.W
+    if d == Dir.E:
+        return Dir.N
+    if d == Dir.S:
+        return Dir.E
+
+
+def move(p: Pos, d: Dir) -> Pos:
+    y, x = p
+    if d == Dir.E:
+        return y, x + 1
+    if d == Dir.W:
+        return y, x - 1
+    if d == Dir.N:
+        return y - 1, x
+    if d == Dir.S:
+        return y + 1, x
 
 
 class Grid:
 
     def __init__(self, vals: Iterable[Iterable[T]]):
         self.vals = [[x for x in row] for row in vals]
+        self.n = len(self.vals)
+        self.m = len(self.vals[0])
 
-    def get(self, i: int, j: int) -> T:
-        return self.vals[i][j]
+    def get(self, p: Pos) -> T:
+        y, x = p
+        return self.vals[y][x]
 
-    def set(self, i: int, j: int, val: T):
-        self.vals[i][j] = T
+    def set(self, p: Pos, val: T) -> None:
+        y, x = p
+        self.vals[y][x] = val
+
+    def inside(self, p: Pos) -> bool:
+        y, x = p
+        return 0 <= y < self.n and 0 <= x < self.m
+
+    def clamp(self, p: Pos) -> Pos:
+        y, x = p
+        return max(0, min(self.n - 1, y)), max(0, min(self.m - 1, x))
+
+    def where(self, f: Callable[[T], bool]) -> list[Pos]:
+        return [(y, x) for y in range(self.n) for x in range(self.m) if f(self.get((y, x)))]
 
 
 def from_block(data: str):

@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Any, TypeVar, Iterable, Callable, Optional, Iterator
 
 T = TypeVar("T")
+S = TypeVar("S")
 
 
 class Dir(Enum):
@@ -13,6 +14,13 @@ class Dir(Enum):
 
 
 Pos = tuple[int, int]
+PosDir = tuple[Pos, Dir]
+
+
+def manhattan(p1: Pos, p2: Pos) -> int:
+    y1, x1 = p1
+    y2, x2 = p2
+    return abs(y1 - y2) + abs(x1 - x2)
 
 
 def right(d: Dir) -> Dir:
@@ -51,8 +59,8 @@ def move(p: Pos, d: Dir) -> Pos:
 
 class Grid:
 
-    def __init__(self, vals: Iterable[Iterable[T]]):
-        self.vals = [[x for x in row] for row in vals]
+    def __init__(self, vals: Iterable[Iterable[S]], transform: Callable[[S], T] = lambda x: x):
+        self.vals = [[transform(x) for x in row] for row in vals]
         self.n = len(self.vals)
         self.m = len(self.vals[0])
         self.metadata = defaultdict(dict)
@@ -91,5 +99,5 @@ class Grid:
                 yield i, j
 
 
-def from_block(data: str):
-    return Grid(data.splitlines())
+def from_block(data: str, transform: Callable[[str], T] = lambda x: x):
+    return Grid(data.splitlines(), transform)

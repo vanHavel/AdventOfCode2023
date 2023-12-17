@@ -1,3 +1,5 @@
+import sys
+
 from aocd import get_data, submit
 
 DAY = 1
@@ -15,8 +17,9 @@ def part2(data: str) -> str:
 
 
 if __name__ == '__main__':
+    sys.setrecursionlimit(1_000_000)
     input_data = get_data(day=DAY, year=YEAR)
-    test_data = """"""
+    test_data = r""""""
     test1 = part1(test_data)
     ans1 = part1(input_data)
     print(test1)

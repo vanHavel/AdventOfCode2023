@@ -1,5 +1,6 @@
+from collections import defaultdict
 from enum import Enum
-from typing import TypeVar, Iterable, Callable
+from typing import Any, TypeVar, Iterable, Callable, Optional, Iterator
 
 T = TypeVar("T")
 
@@ -54,6 +55,7 @@ class Grid:
         self.vals = [[x for x in row] for row in vals]
         self.n = len(self.vals)
         self.m = len(self.vals[0])
+        self.metadata = defaultdict(dict)
 
     def get(self, p: Pos) -> T:
         y, x = p
@@ -73,6 +75,20 @@ class Grid:
 
     def where(self, f: Callable[[T], bool]) -> list[Pos]:
         return [(y, x) for y in range(self.n) for x in range(self.m) if f(self.get((y, x)))]
+
+    def mark(self, p: Pos, k: str, v: Any) -> None:
+        self.metadata[p][k] = v
+
+    def meta(self, p: Pos, k: str) -> Optional[Any]:
+        return self.metadata[p].get(k)
+
+    def reset_meta(self) -> None:
+        self.metadata = defaultdict(dict)
+
+    def positions(self) -> Iterator[Pos]:
+        for i in range(self.n):
+            for j in range(self.m):
+                yield i, j
 
 
 def from_block(data: str):

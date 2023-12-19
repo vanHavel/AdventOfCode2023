@@ -45,16 +45,27 @@ def left(d: Dir) -> Dir:
         return Dir.E
 
 
-def move(p: Pos, d: Dir) -> Pos:
+def turnaround(d: Dir) -> Dir:
+    if d == Dir.W:
+        return Dir.E
+    if d == Dir.N:
+        return Dir.S
+    if d == Dir.E:
+        return Dir.W
+    if d == Dir.S:
+        return Dir.N
+
+
+def move(p: Pos, d: Dir, steps: int = 1) -> Pos:
     y, x = p
     if d == Dir.E:
-        return y, x + 1
+        return y, x + steps
     if d == Dir.W:
-        return y, x - 1
+        return y, x - steps
     if d == Dir.N:
-        return y - 1, x
+        return y - steps, x
     if d == Dir.S:
-        return y + 1, x
+        return y + steps, x
 
 
 class Grid:
@@ -70,6 +81,8 @@ class Grid:
         return self.vals[y][x]
 
     def set(self, p: Pos, val: T) -> None:
+        if not self.inside(p):
+            raise ValueError(f"{p} Out of grid.")
         y, x = p
         self.vals[y][x] = val
 
@@ -97,6 +110,14 @@ class Grid:
         for i in range(self.n):
             for j in range(self.m):
                 yield i, j
+
+    def show(self, transform: Callable[[T], str] = str) -> str:
+        res = ""
+        for i in range(self.n):
+            for j in range(self.m):
+                res += transform(self.get((i, j)))
+            res += "\n"
+        return res
 
 
 def from_block(data: str, transform: Callable[[str], T] = lambda x: x):

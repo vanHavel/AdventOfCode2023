@@ -7,3 +7,4 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "~3.11"
 advent-of-code-data = "*"
+joblib = "*"
